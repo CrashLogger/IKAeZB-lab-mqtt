@@ -12,6 +12,10 @@ location_queue = Queue()
 radiation_queue = Queue()
 airqual_queue = Queue()
 
+location_data = {}
+radiation_data = {}
+airqual_data = {}
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -20,10 +24,10 @@ def index():
 
 @app.route('/api/position')
 def get_position():
-    # Get the latest data from the dumbass queue
     if not location_queue.empty():
         latest_data = location_queue.get()
-    return jsonify(latest_data)
+        return jsonify(latest_data)
+    return jsonify({})  # Return empty object when queue is empty
 
 @app.route('/api/air')
 def get_airquality():
