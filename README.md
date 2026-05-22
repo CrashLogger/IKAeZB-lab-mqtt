@@ -1,2 +1,2 @@
-# IKAeZB-lab-mqtt
-MQTT Lab for Internet Subject
+# GalernaWeb
+Galerna telemetry and control web-app
