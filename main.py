@@ -3,6 +3,8 @@ import threading
 from datetime import *
 from model.subscriber import subscriber
 from flask import *
+import sqlite3
+from model import apiDb
 
 # env.py fitxategia EZ DA GITHUBERA IGOKO.
 # .gitignore fitxategi baten bera ekidituko dugu!
@@ -24,24 +26,19 @@ def index():
 
 @app.route('/api/position')
 def get_position():
-    if not location_queue.empty():
-        latest_data = location_queue.get()
-        return jsonify(latest_data)
-    return jsonify({})  # Return empty object when queue is empty
+    return apiDb.get_latest_location()
 
 @app.route('/api/air')
 def get_airquality():
-    # Get the latest data from the dumbass queue
     if not airqual_queue.empty():
-        latest_data = airqual_queue.get()
-    return jsonify(latest_data)
+        return jsonify(airqual_queue.get())
+    return jsonify({})
 
 @app.route('/api/radiation')
 def get_radiation():
-    # Get the latest data from the dumbass queue
     if not radiation_queue.empty():
-        latest_data = radiation_queue.get()
-    return jsonify(latest_data)
+        return jsonify(radiation_queue.get())
+    return jsonify({})
     
 
 if __name__ == '__main__':
