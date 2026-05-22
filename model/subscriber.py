@@ -1,4 +1,5 @@
 import paho.mqtt.client as mqtt
+import ssl
 
 class subscriber:
     def __init__(self, topics, location_queue, air_queue, rad_queue):
@@ -43,5 +44,10 @@ class subscriber:
     def start_listening(self):
         self.client.on_connect = self.on_connect
         self.client.on_message = self.on_message
-        self.client.connect("127.0.0.1", 1883, 60)
+        self.client.tls_set(
+            ca_certs=None,  # Add path to CA cert if needed
+            cert_reqs=ssl.CERT_REQUIRED,
+            tls_version=ssl.PROTOCOL_TLSv1_2
+        )
+        self.client.connect("127.0.0.1", 8883, 60)
         self.client.loop_forever()
