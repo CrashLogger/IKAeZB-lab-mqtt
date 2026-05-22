@@ -18,8 +18,8 @@ function updatePosition(data) {
         console.error("Invalid data:", data);
         return;
     }
-
-    if(!isNaN(data.lat) || !isNaN(data.lon)){
+    
+    if(data.lat && data.lon && !isNaN(data.lat) && !isNaN(data.lon)){
         GalernaMarker.setLatLng([data.lat, data.lon]);
 
         // Add the new position to the path
@@ -31,7 +31,6 @@ function updatePosition(data) {
     document.getElementById('lat').textContent = data.lat.toFixed(7);
     document.getElementById('lon').textContent = data.lon.toFixed(7);
     document.getElementById('altitude').textContent = data.altitude.toFixed(4);
-    document.getElementById('rad').textContent = data.rad.toFixed(4);
     document.getElementById('roll').textContent = data.roll.toFixed(4);
     document.getElementById('pitch').textContent = data.pitch.toFixed(4);
 }
@@ -40,9 +39,6 @@ function updateAir(data) {
     if (!data) {
         console.error("Invalid data:", data);
         return;
-    }
-
-    if(!isNaN(data.lat) || !isNaN(data.lon)){
     }
 
     document.getElementById('temp').textContent = data.temp.toFixed(2);
@@ -56,9 +52,6 @@ function updateRadiation(data) {
         return;
     }
 
-    if(!isNaN(data.lat) || !isNaN(data.lon)){
-    }
-
     document.getElementById('cps').textContent = data.rad.toFixed(2);
     document.getElementById('rad').textContent = data.cps.toFixed(2);
 }
@@ -67,50 +60,23 @@ function updateRadiation(data) {
 // Request new data periodically
 setInterval(() => {
     fetch('/api/position')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log("Received data:", data);
+    .then(response => response.json())
+    .then(data => {
+        if(data.lat && data.lon) {
             updatePosition(data);
             map.setView([data.lat, data.lon]);
-        })
-        .catch(error => {
-            console.error("Error fetching data:", error);
-        });
+        }
+    })
+    .catch(console.error);
 
-    fetch('/api/air')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log("Received data:", data);
-            updateAir(data);
-            map.setView([data.lat, data.lon]);
-        })
-        .catch(error => {
-            console.error("Error fetching data:", error);
-        });
+// Air and radiation should NOT try to set map view
+fetch('/api/air')
+    .then(response => response.json())
+    .then(data => updateAir(data))
+    .catch(console.error);
 
-    fetch('/api/radiation')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log("Received data:", data);
-            updateRadiation(data);
-            map.setView([data.lat, data.lon]);
-        })
-        .catch(error => {
-            console.error("Error fetching data:", error);
-        });
-}, 2000);
+fetch('/api/radiation')
+    .then(response => response.json())
+    .then(data => updateRadiation(data))
+    .catch(console.error);
+}, 1000);

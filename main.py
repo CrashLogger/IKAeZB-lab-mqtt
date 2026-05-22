@@ -30,19 +30,14 @@ def get_position():
 
 @app.route('/api/air')
 def get_airquality():
-    if not airqual_queue.empty():
-        return jsonify(airqual_queue.get())
-    return jsonify({})
+    return apiDb.get_latest_airquality()
 
 @app.route('/api/radiation')
 def get_radiation():
-    if not radiation_queue.empty():
-        return jsonify(radiation_queue.get())
-    return jsonify({})
-    
+    return apiDb.get_latest_radiation()
 
 if __name__ == '__main__':
     locationsub = subscriber(["#"], location_queue, airqual_queue, radiation_queue)
     print("Here!");
     threading.Thread(target=locationsub.start_listening, daemon=True).start()
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0', port='5001')

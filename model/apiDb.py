@@ -13,3 +13,23 @@ def get_latest_location():
             "roll": row[5], "pitch": row[6]
         })
     return jsonify({})
+
+def get_latest_radiation():
+    conn = sqlite3.connect('data/iot.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM radiation_log ORDER BY timestamp DESC LIMIT 1')
+    row = cursor.fetchone()
+    conn.close()
+    if row:
+        return jsonify({"rad": row[2], "cps": row[3]})
+    return jsonify({})
+
+def get_latest_airquality():
+    conn = sqlite3.connect('data/iot.db')
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM meteo_log ORDER BY timestamp DESC LIMIT 1')
+    row = cursor.fetchone()
+    conn.close()
+    if row:
+        return jsonify({"temp": row[2], "pres": row[3], "humid": row[4]})
+    return jsonify({})
