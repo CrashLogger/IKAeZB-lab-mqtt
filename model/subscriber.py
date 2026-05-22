@@ -2,6 +2,13 @@ import paho.mqtt.client as mqtt
 import ssl
 import sqlite3
 
+from dotenv import load_dotenv
+import os
+load_dotenv()
+
+USERNAME = os.getenv('MQTT_USERNAME')
+PASSWORD = os.getenv('MQTT_PASSWORD')
+
 class subscriber:
     def __init__(self, topics, location_queue, air_queue, rad_queue):
         self.topics = topics
@@ -63,7 +70,8 @@ class subscriber:
         self.client.on_connect = self.on_connect
         self.client.on_message = self.on_message
 
-#        self.client.tls_set(ca_certs=None,cert_reqs=ssl.CERT_REQUIRED,tls_version=ssl.PROTOCOL_TLSv1_2)
-#        self.client.connect("127.0.0.1", 8883, 60)
-        self.client.connect("127.0.0.1", 1883, 60)
+        self.client.tls_set(ca_certs=None,cert_reqs=ssl.CERT_REQUIRED,tls_version=ssl.PROTOCOL_TLSv1_2)
+        self.client.username_pw_set("USERNAME", "PASSWORD")
+        self.client.connect("127.0.0.1", 8883, 60)
+        #self.client.connect("127.0.0.1", 1883, 60)
         self.client.loop_forever()
