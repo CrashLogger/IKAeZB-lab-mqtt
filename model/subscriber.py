@@ -71,7 +71,7 @@ class subscriber:
         self.client.on_message = self.on_message
 
         
-        self.client.username_pw_set("USERNAME", "PASSWORD")
+        self.client.username_pw_set(USERNAME, PASSWORD)
         #self.client.tls_set(ca_certs=None,cert_reqs=ssl.CERT_REQUIRED,tls_version=ssl.PROTOCOL_TLSv1_2)
         #self.client.connect("galerna.eus", 8883, 60)
         self.client.connect("127.0.0.1", 1883, 60)
