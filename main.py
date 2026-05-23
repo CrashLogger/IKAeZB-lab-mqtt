@@ -19,6 +19,7 @@ radiation_data = {}
 airqual_data = {}
 
 app = Flask(__name__)
+app.config['APPLICATION_ROOT'] = '/ikaebz'
 
 @app.route('/')
 def index():

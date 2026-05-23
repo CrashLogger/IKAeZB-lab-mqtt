@@ -59,7 +59,7 @@ function updateRadiation(data) {
 
 // Request new data periodically
 setInterval(() => {
-    fetch('/api/position')
+    fetch('/ikaezb/api/position')
     .then(response => response.json())
     .then(data => {
         if(data.lat && data.lon) {
@@ -70,12 +70,12 @@ setInterval(() => {
     .catch(console.error);
 
 // Air and radiation should NOT try to set map view
-fetch('/api/air')
+fetch('/ikaezb/api/air')
     .then(response => response.json())
     .then(data => updateAir(data))
     .catch(console.error);
 
-fetch('/api/radiation')
+fetch('/ikaezb/api/radiation')
     .then(response => response.json())
     .then(data => updateRadiation(data))
     .catch(console.error);
