@@ -3,6 +3,8 @@
 <head>
     <title>IoT MQTT laborategi demoa</title>
     <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="ikaezb/static/style.css">
+    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <style>
@@ -29,8 +31,7 @@
             <p>Lat: <span id="lat">--</span></p>
             <p>Lon: <span id="lon">--</span></p>
             <p>Altitude: <span id="altitude">--</span> m</p>
-            <p>Roll: <span id="roll">--</span> °</p>
-            <p>Pitch: <span id="pitch">--</span> °</p>
+            <p>Latest from: <span id="time-location">--</span></p>
         </div>
         <br>
         <div class="card">
@@ -38,16 +39,19 @@
             <p>Tenperatura: <span id="temp">--</span> °C</p>
             <p>Presioa: <span id="pres">--</span> hPa</p>
             <p>Hezetasuna: <span id="humid">--</span></p>
+            <p>Latest from: <span id="time-air">--</span></p>
         </div>
         <br>
         <div class="card">
             <h3>Bestelako sentsoreak:</h3>
             <p>rad: <span id="rad">--</span> µSv/h</p>
             <p>CPS: <span id="cps">--</span></p>
+            <p>Latest from: <span id="time-rad">--</span></p>
         </div>
     </div>
 
     <script src="static/mapUpdate.js"></script>
+    <script src="ikaezb/static/mapUpdate.js"></script>
 
 </body>
 </html>

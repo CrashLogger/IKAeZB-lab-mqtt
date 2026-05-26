@@ -9,6 +9,7 @@ def get_latest_location():
     conn.close()
     if row:
         return jsonify({
+            "timestamp": row[1],
             "lat": row[2], "lon": row[3], "altitude": row[4],
             "roll": row[5], "pitch": row[6]
         })
@@ -21,7 +22,7 @@ def get_latest_radiation():
     row = cursor.fetchone()
     conn.close()
     if row:
-        return jsonify({"rad": row[2], "cps": row[3]})
+        return jsonify({"timestamp": row[1], "rad": row[2], "cps": row[3]})
     return jsonify({})
 
 def get_latest_airquality():
@@ -31,5 +32,5 @@ def get_latest_airquality():
     row = cursor.fetchone()
     conn.close()
     if row:
-        return jsonify({"temp": row[2], "pres": row[3], "humid": row[4]})
+        return jsonify({"timestamp": row[1], "temp": row[2], "pres": row[3], "humid": row[4]})
     return jsonify({})

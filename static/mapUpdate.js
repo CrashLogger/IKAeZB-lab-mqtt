@@ -1,11 +1,11 @@
 // Initialize the map and marker
-const map = L.map('map').setView([40.416775, -3.703790], 12);
+const map = L.map('map').setView([43.32, -3.020], 12);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
 // Add a marker for the Galerna
-const GalernaMarker = L.marker([43.43, -3.7]).addTo(map);
+const GalernaMarker = L.marker([43.32, -3.020]).addTo(map);
 
 // Array to store the Galerna's path
 let GalernaPath = [];
@@ -31,8 +31,7 @@ function updatePosition(data) {
     document.getElementById('lat').textContent = data.lat.toFixed(7);
     document.getElementById('lon').textContent = data.lon.toFixed(7);
     document.getElementById('altitude').textContent = data.altitude.toFixed(4);
-    document.getElementById('roll').textContent = data.roll.toFixed(4);
-    document.getElementById('pitch').textContent = data.pitch.toFixed(4);
+    document.getElementById('time-location').textContent = data.timestamp;
 }
 
 function updateAir(data) {
@@ -44,6 +43,7 @@ function updateAir(data) {
     document.getElementById('temp').textContent = data.temp.toFixed(2);
     document.getElementById('humid').textContent = data.humid.toFixed(2);
     document.getElementById('pres').textContent = data.pres.toFixed(2);
+    document.getElementById('time-air').textContent = data.timestamp;
 }
 
 function updateRadiation(data) {
@@ -52,8 +52,9 @@ function updateRadiation(data) {
         return;
     }
 
-    document.getElementById('cps').textContent = data.rad.toFixed(2);
-    document.getElementById('rad').textContent = data.cps.toFixed(2);
+    document.getElementById('cps').textContent = data.cps.toFixed(2);
+    document.getElementById('rad').textContent = data.rad.toFixed(2);
+    document.getElementById('time-rad').textContent = data.timestamp;
 }
 
 

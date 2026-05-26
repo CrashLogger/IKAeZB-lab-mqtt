@@ -25,15 +25,15 @@ app.config['APPLICATION_ROOT'] = '/ikaebz'
 def index():
     return render_template('index.html')
 
-@app.route('/api/position')
+@app.route('/ikaezb/api/position')
 def get_position():
     return apiDb.get_latest_location()
 
-@app.route('/api/air')
+@app.route('/ikaezb/api/air')
 def get_airquality():
     return apiDb.get_latest_airquality()
 
-@app.route('/api/radiation')
+@app.route('/ikaezb/api/radiation')
 def get_radiation():
     return apiDb.get_latest_radiation()
 
