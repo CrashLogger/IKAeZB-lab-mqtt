@@ -3,6 +3,7 @@
 #include <TinyGPS++.h>
 #include <HardwareSerial.h>
 #include <WiFiClientSecure.h>
+#include <Adafruit_LPS35HW.h>
 
 // --- WiFi ---
 const char* WIFI_SSID = "Portuetxe24";
@@ -16,6 +17,7 @@ const char* MQTT_PASS = "t3l3k35";
 
 // --- Topics where we are the publisher ---
 const char* GPS_TOPIC = "topic/location";
+const char* AIR_TOPIC = "topic/meteo";
 
 // --- Topics where we are subscribers
 const char* RUNNING_LIGHTS_TOPIC = "car/lights";
@@ -42,12 +44,17 @@ TinyGPSPlus gps;
 WiFiClientSecure wifiClient;
 PubSubClient mqttClient(wifiClient);
 
+// --- Pressure sensor ---
+Adafruit_LPS35HW lps;
+
 // --- SCHEDULERS ---
 uint32_t last_mqtt_tx = 0;
+uint32_t last_mqtt_meteo_tx = 0;
 uint32_t last_rx = 0;
 uint32_t last_indicator = 0;
 // · · ·
 uint32_t period_mqtt_tx = 1000;
+uint32_t period_mqtt_meteo_tx = 2000;
 uint32_t period_rx = 10;
 uint32_t period_indicator = 425;
 
@@ -112,6 +119,12 @@ void setup() {
   pinMode(INDICATOR_L_PIN, OUTPUT);
   pinMode(INDICATOR_R_PIN, OUTPUT);
 
+  if (!lps.begin_I2C()) { // Initialize the sensor
+    Serial.println("Failed to find LPS3X chip");
+    while (1) { delay(10); }
+  }
+  Serial.println("LPS3X Found!");
+
   // Connect to the given WiFi SSID
   WiFi.begin(WIFI_SSID, WIFI_PASS);
   Serial.print("Connecting to WiFi...");
@@ -158,6 +171,7 @@ void loop() {
     mqttClient.loop();
   }
 
+  //we do all transmissions at once because why not #yolo
   if(uptime_millis >= (last_mqtt_tx + period_mqtt_tx)){
     last_mqtt_tx = millis();
     if (gps.location.isValid() && gps.altitude.isValid()) {
@@ -172,6 +186,15 @@ void loop() {
     else{
     Serial.println(F("Still waiting for GPS lock!"));
     }
+  }
+
+  if(uptime_millis >= (last_mqtt_meteo_tx + period_mqtt_meteo_tx)){
+    last_mqtt_meteo_tx = millis();
+    char csv[100];
+    snprintf(csv, sizeof(csv), "%.2f,%.2f,%.2f", lps.readTemperature(), lps.readPressure(), 0);
+    Serial.print("Publishing: ");
+    Serial.println(csv);
+    mqttClient.publish(AIR_TOPIC, csv);
   }
 
 }
