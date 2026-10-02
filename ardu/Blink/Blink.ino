@@ -6,8 +6,8 @@
 #include <Adafruit_LPS35HW.h>
 
 // --- WiFi ---
-const char* WIFI_SSID = "Portuetxe24";
-const char* WIFI_PASS = "ErEkIk27Ct";
+const char* WIFI_SSID = "CrashInternet";
+const char* WIFI_PASS = "ElectricBogaloo";
 
 // --- MQTT Broker information ---
 const char* MQTT_BROKER = "galerna.eus"; // e.g., "mqtt.example.com"
@@ -177,8 +177,8 @@ void loop() {
     if (gps.location.isValid() && gps.altitude.isValid()) {
         char csv[100];
         //Not interested in doxxing myself 24/7 thank you!!
-        //snprintf(csv, sizeof(csv), "%.6f,%.6f,%.6f", gps.location.lat(), gps.location.lng(), gps.altitude.meters());
-        snprintf(csv, sizeof(csv), "%.2f,%.2f,%.2f", gps.location.lat(), gps.location.lng(), gps.altitude.meters());
+        snprintf(csv, sizeof(csv), "%.6f,%.6f,%.6f", gps.location.lat(), gps.location.lng(), gps.altitude.meters());
+        //snprintf(csv, sizeof(csv), "%.2f,%.2f,%.2f", gps.location.lat(), gps.location.lng(), gps.altitude.meters());
         Serial.print("Publishing: ");
         Serial.println(csv);
         mqttClient.publish(GPS_TOPIC, csv);

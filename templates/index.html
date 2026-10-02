@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>IoT MQTT laborategi demoa</title>
+    <title>TAP-2.1a</title>
     <link rel="stylesheet" href="static/style.css">
     <link rel="stylesheet" href="ikaezb/static/style.css">
     
@@ -14,39 +14,61 @@
             height: 100%;
         }
         #map {
-            width: 75%;
+            width: 66%;
             height: 100%;
             float: left;
         }
     </style>
 </head>
-<body style="overflow: hidden">
+<body style="overflow: scroll">
     <div id="map"></div>
     <div id="info-panel" class="container" style="overflow: visible;">
         <div class="titleCard">
-            <h3>MQTT Demo</h3>
+            <h3>TAP Telemetry</h3>
         </div>
         <br>
         <div class="card">
-            <p>Lat: <span id="lat">--</span></p>
-            <p>Lon: <span id="lon">--</span></p>
-            <p>Altitude: <span id="altitude">--</span> m</p>
-            <p>Latest from: <span id="time-location">--</span></p>
+            <h3>Vehicle telemetry</h3>
+            <p>Mode: <span id="VEH-MODE">--</span></p>
+            <p>Lat: <span id="VEH-LAT">--</span></p>
+            <p>Lon: <span id="VEH-LON">--</span></p>
+            <hr/>
+            <p>Heading: <span id="VEH-HDG">--</span> º</p>
+            <p>Roll: <span id="VEH-ROLL">--</span> º</p>
+            <p>Roll: <span id="VEH-PITCH">--</span> º</p>
+            <hr/>
+            <p>Altitude/Depth: <span id="VEH-ALT">--</span> m</p>
+            <p>Speed: <span id="VEH-SPD">--</span> m</p>
         </div>
         <br>
         <div class="card">
-            <h3>Airearen kalitatea</h3>
-            <p>Tenperatura: <span id="temp">--</span> °C</p>
-            <p>Presioa: <span id="pres">--</span> hPa</p>
-            <p>Hezetasuna: <span id="humid">--</span></p>
-            <p>Latest from: <span id="time-air">--</span></p>
+            <h3>Sensor data</h3>
+            <hr/>
+            <p>Temperature: <span id="SCI-TEMP">--</span> °C</p>
+            <p>Pressure: <span id="SCI-PRESS">--</span> hPa</p>
+            <p>Salinity: <span id="SCI-SALT">--</span> hPa</p>
+            <hr/>
+            <p>Luminosity: <span id="SCI-LUM">--</span> Lux</p>
+            <p>Gamma radiation: <span id="SCI-RAD">--</span> µSv/h</p>
+
         </div>
         <br>
+
+    </div>
+    <div id="meta-info" class="horizontalContainer" style="overflow: visible;">
+        <hr/>
         <div class="card">
-            <h3>Bestelako sentsoreak:</h3>
-            <p>rad: <span id="rad">--</span> µSv/h</p>
-            <p>CPS: <span id="cps">--</span></p>
-            <p>Latest from: <span id="time-rad">--</span></p>
+            <h3>MQTT information:</h3>
+            <p>Broker: <span id="MQT-BROKER">--</span></p>
+            <p>Latest Update: <span id="MQT-LATEST">--</span></p>
+        </div>
+        <br/>
+        <div class="card">
+            <h3>TAP communication statistics:</h3>
+            <p>RXd packets: <span id="RX-PKTS">--</span></p>
+            <p>RX RSSI: <span id="RX-RSSI">--</span></p>
+            <p>RX SNR: <span id="RX-SNR">--</span></p>
+            <p>RTT: <span id="RX-RTT">--</span></p>
         </div>
     </div>
 

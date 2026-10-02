@@ -1,83 +1,128 @@
-// Initialize the map and marker
+//
+// Leaflet setup
+//
 const map = L.map('map').setView([43.32, -3.020], 12);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-}).addTo(map);
 
-// Add a marker for the Galerna
-const GalernaMarker = L.marker([43.32, -3.020]).addTo(map);
-
-// Array to store the Galerna's path
-let GalernaPath = [];
-// Polyline to draw the path
-let pathLine = L.polyline([], {color: 'yellow'}).addTo(map);
-
-// Function to update the Galerna's position
-function updatePosition(data) {
-    if (!data) {
-        console.error("Invalid data:", data);
-        return;
+L.tileLayer(
+    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    {
+        attribution: '&copy; OpenStreetMap contributors'
     }
-    
-    if(data.lat && data.lon && !isNaN(data.lat) && !isNaN(data.lon)){
-        GalernaMarker.setLatLng([data.lat, data.lon]);
+).addTo(map);
 
-        // Add the new position to the path
-        GalernaPath.push([data.lat, data.lon]);
-        // Update the polyline with the new path
-        pathLine.setLatLngs(GalernaPath);
+//
+// Vehicle marker
+//
+const vehicleMarker = L.marker([43.32, -3.020]).addTo(map);
+
+//
+// Vehicle path
+//
+let vehiclePath = [];
+
+const pathLine = L.polyline(
+    [],
+    {
+        color: 'yellow'
     }
+).addTo(map);
 
-    document.getElementById('lat').textContent = data.lat.toFixed(7);
-    document.getElementById('lon').textContent = data.lon.toFixed(7);
-    document.getElementById('altitude').textContent = data.altitude.toFixed(4);
-    document.getElementById('time-location').textContent = data.timestamp;
+//
+// Helper
+//
+function setField(id, value)
+{
+    const element = document.getElementById(id);
+
+    if (element)
+    {
+        element.textContent = value;
+    }
 }
 
-function updateAir(data) {
-    if (!data) {
-        console.error("Invalid data:", data);
+//
+// MQTT Status Coloring
+//
+function updateBrokerStatus()
+{
+    const broker = document.getElementById("MQT-BROKER");
+
+    if (!broker)
+        return;
+
+    const value = broker.textContent.trim().toUpperCase();
+
+    if (value === "DISCONNECTED")
+    {
+        broker.style.color = "red";
+    }
+    else
+    {
+        broker.style.color = "lime";
+    }
+}
+
+//
+// Update GPS position
+//
+function updateVehiclePosition(data)
+{
+    const lat = parseFloat(data["VEH-LAT"]);
+    const lon = parseFloat(data["VEH-LON"]);
+
+    if (isNaN(lat) || isNaN(lon))
+    {
         return;
     }
 
-    document.getElementById('temp').textContent = data.temp.toFixed(2);
-    document.getElementById('humid').textContent = data.humid.toFixed(2);
-    document.getElementById('pres').textContent = data.pres.toFixed(2);
-    document.getElementById('time-air').textContent = data.timestamp;
+    vehicleMarker.setLatLng([lat, lon]);
+
+    vehiclePath.push([lat, lon]);
+
+    pathLine.setLatLngs(vehiclePath);
+
+    map.setView([lat, lon]);
 }
 
-function updateRadiation(data) {
-    if (!data) {
-        console.error("Invalid data:", data);
-        return;
-    }
-
-    document.getElementById('cps').textContent = data.cps.toFixed(2);
-    document.getElementById('rad').textContent = data.rad.toFixed(2);
-    document.getElementById('time-rad').textContent = data.timestamp;
-}
-
-
-// Request new data periodically
-setInterval(() => {
-    fetch('/ikaezb/api/position')
+//
+// Main telemetry update
+//
+function updateTelemetry()
+{
+    fetch('/tapBridge/api/telemetry')
     .then(response => response.json())
-    .then(data => {
-        if(data.lat && data.lon) {
-            updatePosition(data);
-            map.setView([data.lat, data.lon]);
-        }
+    .then(data =>
+    {
+        //
+        // Update every field automatically
+        //
+        Object.entries(data).forEach(([key, value]) =>
+        {
+            setField(key, value);
+        });
+
+        //
+        // Map updates
+        //
+        updateVehiclePosition(data);
+
+        //
+        // MQTT status colors
+        //
+        updateBrokerStatus();
     })
-    .catch(console.error);
+    .catch(error =>
+    {
+        console.error("Telemetry error:", error);
+    });
+}
 
-// Air and radiation should NOT try to set map view
-fetch('/ikaezb/api/air')
-    .then(response => response.json())
-    .then(data => updateAir(data))
-    .catch(console.error);
+//
+// Initial update immediately
+//
+updateTelemetry();
 
-fetch('/ikaezb/api/radiation')
-    .then(response => response.json())
-    .then(data => updateRadiation(data))
-    .catch(console.error);
-}, 1000);
+//
+// Poll once per second
+//
+setInterval(updateTelemetry, 1000);

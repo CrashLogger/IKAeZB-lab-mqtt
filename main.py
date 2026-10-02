@@ -25,20 +25,44 @@ app.config['APPLICATION_ROOT'] = '/ikaebz'
 def index():
     return render_template('index.html')
 
-@app.route('/ikaezb/api/position')
+@app.route('/tapBridge/api/position')
 def get_position():
     return apiDb.get_latest_location()
 
-@app.route('/ikaezb/api/air')
+@app.route('/tapBridge/api/air')
 def get_airquality():
     return apiDb.get_latest_airquality()
 
-@app.route('/ikaezb/api/radiation')
+@app.route('/tapBridge/api/radiation')
 def get_radiation():
     return apiDb.get_latest_radiation()
 
+@app.route("/tapBridge/api/telemetry")
+def telemetry():
+
+    conn = sqlite3.connect("data/iot.db")
+
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT topic, value
+        FROM telemetry
+    """)
+
+    rows = cursor.fetchall()
+
+    ret = {}
+
+    for topic, value in rows:
+
+        key = topic.split("/")[-1]
+
+        ret[key] = value
+
+    return jsonify(ret)
+
 if __name__ == '__main__':
-    locationsub = subscriber(["#"], location_queue, airqual_queue, radiation_queue)
-    print("Here!");
+    locationsub = subscriber()
+    print("Here!")
     threading.Thread(target=locationsub.start_listening, daemon=True).start()
     app.run(debug=True, host='0.0.0.0', port='5001')

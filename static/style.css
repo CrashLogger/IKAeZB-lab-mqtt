@@ -68,18 +68,18 @@ a:hover {
 
 .container {
     overflow-y: scroll;
-    margin-left: 76.5%;
+    margin-left: 67.5%;
     margin-right: 1.5%;
     padding: 2rem 0;
 }
 .horizontalContainer {
-    width: 80%;
+    width: 97%;
     margin: auto;
 }
 .card {
     background: white;
-    padding: 2rem;
-    border-radius: 5px;
+    padding: 1.5rem;
+    border-radius: 2px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
@@ -115,13 +115,13 @@ code {
 }
 
 .titleCard{
-    background: #ffd466;
+    background: #ffb60c;
     padding: 1rem;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 .importantCard{
-    background: #e695b1;
+    background: #ffb60c72;
     margin: 0.5rem 0;
     padding: 0.5rem;
     border-radius: 5px;
@@ -129,7 +129,7 @@ code {
 }
 
 .proCard{
-    background: #e7c96d;
+    background: #ffb60cbd;
     margin: 0.5rem 0;
     padding: 0.5rem;
     border-radius: 5px;
@@ -141,15 +141,6 @@ code {
     min-height: 100vh;
 }
 
-.sidebar {
-    width: 200px;
-    background: #f4f4f4;
-    padding: 1rem;
-    position: fixed;
-    height: 100vh;
-    overflow-y: auto;
-    border-right: 1px solid #ddd;
-}
 
 .sidebar h4 {
     margin-top: 0;
@@ -172,12 +163,6 @@ code {
 
 .sidebar a:hover {
     text-decoration: underline;
-}
-
-.main-content {
-    margin-left: 220px; /* Width of sidebar + a little extra */
-    width: calc(100% - 220px);
-    flex: 1;
 }
 
 @font-face {
