@@ -8,7 +8,7 @@ load_dotenv()
 
 USERNAME = os.getenv("MQTT_USERNAME")
 PASSWORD = os.getenv("MQTT_PASSWORD")
-BROKER_URL = "app.galerna.eus"
+BROKER_URL = os.getenv("MQTT_BROKER")
 BROKER_PORT = 8883
 
 class subscriber:
