@@ -1,6 +1,4 @@
-//
 // Leaflet setup
-//
 const map = L.map('map').setView([43.32, -3.020], 12);
 
 L.tileLayer(
@@ -10,14 +8,10 @@ L.tileLayer(
     }
 ).addTo(map);
 
-//
 // Vehicle marker
-//
 const vehicleMarker = L.marker([43.32, -3.020]).addTo(map);
 
-//
 // Vehicle path
-//
 let vehiclePath = [];
 
 const pathLine = L.polyline(
@@ -27,9 +21,7 @@ const pathLine = L.polyline(
     }
 ).addTo(map);
 
-//
 // Helper
-//
 function setField(id, value)
 {
     const element = document.getElementById(id);
@@ -40,9 +32,7 @@ function setField(id, value)
     }
 }
 
-//
 // MQTT Status Coloring
-//
 function updateBrokerStatus()
 {
     const broker = document.getElementById("MQT-BROKER");
@@ -62,18 +52,24 @@ function updateBrokerStatus()
     }
 }
 
-//
 // Update GPS position
-//
 function updateVehiclePosition(data)
 {
-    const lat = parseFloat(data["VEH-LAT"]);
-    const lon = parseFloat(data["VEH-LON"]);
+
+
+    let lat = parseFloat(data["VEH-LAT"]);
+    let lon = parseFloat(data["VEH-LON"]);
 
     if (isNaN(lat) || isNaN(lon))
     {
         return;
     }
+
+    // Demo GPS spoofing
+    lat = 43.267819;
+    lon = -2.928508;
+    data["VEH-LAT"] = lat;
+    data["VEH-LON"] = lon;
 
     vehicleMarker.setLatLng([lat, lon]);
 
@@ -84,31 +80,32 @@ function updateVehiclePosition(data)
     map.setView([lat, lon]);
 }
 
-//
 // Main telemetry update
-//
 function updateTelemetry()
 {
     fetch('/tapBridge/api/telemetry')
     .then(response => response.json())
     .then(data =>
     {
-        //
+
+
+        // Map updates
+
+        updateVehiclePosition(data);
+
+
+
         // Update every field automatically
-        //
+
         Object.entries(data).forEach(([key, value]) =>
         {
             setField(key, value);
         });
 
-        //
-        // Map updates
-        //
-        updateVehiclePosition(data);
 
-        //
+
         // MQTT status colors
-        //
+
         updateBrokerStatus();
     })
     .catch(error =>
@@ -117,12 +114,8 @@ function updateTelemetry()
     });
 }
 
-//
 // Initial update immediately
-//
 updateTelemetry();
 
-//
 // Poll once per second
-//
 setInterval(updateTelemetry, 1000);
